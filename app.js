@@ -1,20 +1,23 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
-// const port = 3000;
-// const mongoose = require("mongoose");
-// const stuffRoots = require("./roots/stuff");
-// const userRoots = require("./roots/user");
+const mongoose = require("mongoose");
+const userRoutes = require("./routes/user");
+const password = process.env.DA_PASSWORD;
+const username = process.env.DA_USER;
 
-// mongoose
-//   .connect(
-//     "mongodb+srv://Yuko:Monodie77@cluster0.y6vxi.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-//     { useNewUrlParser: true, useUnifiedTopology: true }
-//   )
-//   .then(() => console.log("Connexion à MongoDB réussie !"))
-//   .catch(() => console.log("Connexion à MongoDB échouée !"));
+//Base de données
+mongoose
+  .connect(
+    `mongodb+srv://${username}:${password}@cluster0.y6vxi.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
+    { useNewUrlParser: true, useUnifiedTopology: true }
+  )
+  .then(() => console.log("Connexion à MongoDB réussie !"))
+  .catch(() => console.error("Connexion à MongoDB échouée !"));
 
 app.use(express.json());
 
+//cors
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -29,12 +32,6 @@ app.use((req, res, next) => {
 });
 
 // routes
-app.post("/api/auth/signup", (req, res) => {
-  console.log("Signup request : ", req.body);
-});
-
-// app.use("/api/stuff", stuffRoots); //pour la route api/stuff, on utilise stuffRoots qui nous renvoi à la logique dans roots/stuff.js
-// app.use("/api/auth", userRoots);
+app.use("/api/auth", userRoutes);
 
 module.exports = app;
-// app.listen(port, () => console.log("listening on port " + port));
