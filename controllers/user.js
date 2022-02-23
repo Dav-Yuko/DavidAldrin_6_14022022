@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
-exports.signup = (req, res) => {
+function signup(req, res) {
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
@@ -16,9 +16,9 @@ exports.signup = (req, res) => {
         .catch((error) => res.status(400).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
-};
+}
 
-exports.login = (req, res) => {
+function login(req, res) {
   User.findOne({ email: req.body.email })
     .then((user) => {
       if (!user) {
@@ -40,4 +40,6 @@ exports.login = (req, res) => {
         .catch((error) => res.status(500).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
-};
+}
+
+module.exports = { signup, login };

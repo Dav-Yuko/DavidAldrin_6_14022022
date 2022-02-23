@@ -1,5 +1,4 @@
 function cors(req, res, next) {
-  //cors
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Headers",

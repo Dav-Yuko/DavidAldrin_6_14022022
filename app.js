@@ -6,6 +6,7 @@ const userRoutes = require("./routes/user");
 const password = process.env.DA_PASSWORD;
 const username = process.env.DA_USER;
 const { cors } = require("./middleware/cors");
+const path = require("path");
 
 //Base de données
 mongoose
