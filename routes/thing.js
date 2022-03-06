@@ -1,4 +1,4 @@
-const express = require("espress");
+const express = require("express");
 const router = express.Router();
 
 const auth = require("../middleware/auth");
@@ -12,12 +12,10 @@ const {
   getAllThings,
 } = require("../controllers/thing");
 
-app.use("/images", express.static(path.join(__dirname, "images")));
-
 router.post("/", auth, multer, createThing);
 router.put("/:id", auth, multer, modifyThing);
 router.delete("/:id", auth, deleteThing);
 router.get("/:id", auth, getOneThing);
-router.get("/:", auth, getAllThings);
+router.get("/", auth, getAllThings);
 
 module.exports = router;

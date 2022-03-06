@@ -1,12 +1,18 @@
-const Thing = require("./models/Thing");
+const Thing = require("../models/Thing");
 
 function createThing(req, res) {
-  delete req.body._id;
+  console.log({ req });
+  const thingObject = JSON.parse(req.body.sauce);
+  delete thingObject._id;
   const thing = new Thing({
-    ...req.body,
+    ...thingObject,
     imageUrl: `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
     }`,
+    likes: 0,
+    dislikes: 0,
+    usersLiked: [],
+    usersDisliked: [],
   });
   thing
     .save()
