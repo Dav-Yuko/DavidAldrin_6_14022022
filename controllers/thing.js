@@ -1,4 +1,5 @@
 const Thing = require("../models/Thing");
+const { unlink } = require("fs");
 
 function createThing(req, res) {
   console.log({ req });
@@ -23,7 +24,7 @@ function createThing(req, res) {
 function modifyThing(req, res) {
   const thing = req.file
     ? {
-        ...JSON.parse(req.body.thing),
+        ...JSON.parse(req.body.sauce),
         imageUrl: `${req.protocol}://${req.get("host")}/images/${
           req.file.filename
         }`,
@@ -35,9 +36,20 @@ function modifyThing(req, res) {
 }
 
 function deleteThing(req, res) {
-  Thing.deleteOne({ _id: req.params.id })
-    .then(() => res.status(200).json({ message: "Objet supprimé !" }))
-    .catch((error) => res.status(400).json({ error }));
+  const { id } = req.params;
+  Thing.findByIdAndDelete(id)
+    .then(deleteImage)
+    .then((thing) => res.send({ message: thing }))
+    .catch((error) => res.status(500).json({ error }));
+}
+
+function deleteImage(thing) {
+  const imageUrl = thing.imageUrl;
+  const fileToDelete = imageUrl.split("/").at(-1);
+  unlink(`images/${fileToDelete}`, (err) => {
+    console.error("problème suppr image", err);
+  });
+  return thing;
 }
 
 function getOneThing(req, res) {
