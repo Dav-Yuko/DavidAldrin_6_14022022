@@ -32,6 +32,7 @@ function modifyThing(req, res) {
     : { ...req.body };
   Thing.updateOne({ _id: req.params.id }, { ...thing, _id: req.params.id })
     .then(() => res.status(200).json({ message: "Objet modifié !" }))
+    .then(() => console.log(oldThing))
     .catch((error) => res.status(400).json({ error }));
 }
 
@@ -46,10 +47,10 @@ function deleteThing(req, res) {
 function deleteImage(thing) {
   const imageUrl = thing.imageUrl;
   const fileToDelete = imageUrl.split("/").at(-1);
-  unlink(`images/${fileToDelete}`, (err) => {
-    console.error("problème suppr image", err);
+  unlink(`images/${fileToDelete}`, () => {
+    return thing;
+    // console.error("problème suppr image", err);
   });
-  return thing;
 }
 
 function getOneThing(req, res) {
@@ -64,10 +65,21 @@ function getAllThings(req, res) {
     .catch((error) => res.status(400).json({ error }));
 }
 
+function likeSauce(req, res) {
+  const { like, userId } = req.params;
+  if ([0, -1, 1].includes(like)) {
+    console.log("yes");
+  }
+  Thing.findOne({ _id: req.params.id })
+    .then((thing) => console.log(thing))
+    .catch((error) => res.status(400).json({ error }));
+}
+
 module.exports = {
   createThing,
   modifyThing,
   deleteThing,
   getOneThing,
   getAllThings,
+  likeSauce,
 };
